@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Treino de Digitação</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #ffffffda;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    #texto {
+      background-color: #eef;
+      border: 2px dashed #4b0082;
+      padding: 20px;
+      margin-bottom: 20px;
+      font-size: 18px;
+      white-space: pre-wrap;
+      border-radius: 10px;
+    }
+
+    #entrada {
+      width: 100%;
+      height: 150px;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      resize: none;
+    }
+
+    #painel {
+      margin-top: 15px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-weight: bold;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      margin-right: 10px;
+      padding: 10px 18px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #4b0082;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #5a00a1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Treino de Digitação</h2>
+
+    <div id="texto"></div>
+
+    <textarea id="entrada" placeholder="Digite aqui o texto acima..."></textarea>
+
+    <div id="painel">
+      <div>⏱️ Tempo: <span id="cronometro">0</span> s</div>
+      <div>✅ Acertos: <span id="acertos">0</span></div>
+      <div>❌ Erros: <span id="erros">0</span></div>
+    </div>
+
+    <div>
+      <button onclick="pausar()">⏸️ Pausar</button>
+      <button onclick="retomar()">▶️ Retomar</button>
+      <button onclick="encerrar()">⏹️ Parar</button>
+    </div>
+  </div>
+    <script>
+const textos = [
+  `O computador é uma das maiores invenções da humanidade.\nCom ele, podemos escrever textos, desenhar, programar e até conversar com pessoas de outros lugares do mundo.`,
+
+  `Dentro de um computador existem várias partes importantes.\nO processador é como o cérebro.\nA memória ajuda a guardar informações.\nE o HD ou SSD guarda tudo o que criamos.`,
+
+  `Usamos o teclado para escrever e o mouse para clicar.\nCom prática, você pode digitar cada vez mais rápido.\nÉ como aprender a tocar um instrumento musical!`,
+
+  `Um software é um programa que usamos no computador.\nExistem softwares para estudar, jogar, desenhar e até criar músicas.\nEles são como ferramentas digitais que ajudam no nosso dia a dia.`,
+
+  `A internet conecta computadores do mundo inteiro.\nEla permite assistir vídeos, pesquisar informações e estudar online.\nMas é importante usar a internet com responsabilidade e segurança.`,
+
+  `Aprender a usar o computador é como abrir uma porta para o futuro.\nQuanto mais você pratica, mais habilidades desenvolve.\nDigitar bem é só o começo de tudo o que você pode conquistar!`,
+
+  `Sabia que você pode criar seus próprios jogos e aplicativos?\nCom dedicação, é possível aprender a programar e transformar ideias em realidade.\nTudo começa com o primeiro passo: conhecer bem o teclado.`,
+
+  `Existem computadores em quase todos os lugares: escolas, hospitais, lojas e empresas.\nEles ajudam as pessoas a trabalhar, estudar e resolver problemas com mais rapidez.`,
+
+  `A tecnologia está sempre mudando.\nHoje usamos celulares, tablets e computadores para muitas coisas.\nE quem aprende desde cedo, sai na frente no mundo digital.`,
+
+  `Você é capaz de aprender tudo o que quiser usando o computador.\nCom paciência, curiosidade e dedicação, o mundo digital pode ser seu aliado no aprendizado.`
+];
+
+    let nivel = 0;
+    let tempo = 0;
+    let intervalo = null;
+    let pausado = false;
+
+    const textoEl = document.getElementById("texto");
+    const entrada = document.getElementById("entrada");
+    const cronometroEl = document.getElementById("cronometro");
+    const acertosEl = document.getElementById("acertos");
+    const errosEl = document.getElementById("erros");
+
+    function iniciarNivel() {
+      textoEl.textContent = textos[nivel];
+      entrada.value = "";
+      tempo = 0;
+      pausado = false;
+      cronometroEl.textContent = tempo;
+      acertosEl.textContent = "0";
+      errosEl.textContent = "0";
+      entrada.disabled = false;
+      clearInterval(intervalo);
+      intervalo = setInterval(() => {
+        if (!pausado) {
+          tempo++;
+          cronometroEl.textContent = tempo;
+        }
+      }, 1000);
+    }
+
+    function compararParcial() {
+  const texto = textos[nivel];
+  const digitado = entrada.value;
+  let acertos = 0;
+  let erros = 0;
+
+  for (let i = 0; i < digitado.length; i++) {
+    if (digitado[i] === texto[i]) {
+      acertos++;
+    } else {
+      erros++;
+    }
+  }
+
+  acertosEl.textContent = acertos;
+  errosEl.textContent = erros;
+
+  // Quando atingir o tamanho do texto original
+  if (digitado.length >= texto.length) {
+    clearInterval(intervalo);
+    const total = acertos + erros;
+    const porcentagem = total > 0 ? (acertos / total) * 100 : 0;
+
+    setTimeout(() => {
+      if (porcentagem >= 60) {
+        if (confirm(`🎉 Parabéns! Você acertou ${porcentagem.toFixed(1)}%.\nDeseja ir para o próximo nível?`)) {
+          nivel++;
+          if (nivel < textos.length) {
+            iniciarNivel();
+          } else {
+            alert("Você concluiu todos os níveis. Parabéns!");
+          }
+        }
+      } else {
+        if (confirm(`Você digitou todo o texto com ${porcentagem.toFixed(1)}% de acertos.\nDeseja tentar novamente este nível?`)) {
+          iniciarNivel();
+        }
+      }
+    }, 100);
+  }
+}
+
+
+
+
+    function pausar() {
+      pausado = true;
+    }
+
+    function retomar() {
+      pausado = false;
+    }
+
+    function encerrar() {
+  clearInterval(intervalo);
+  window.location.href = "final.html"; // redireciona para a página final
+}
+
+    entrada.addEventListener("input", compararParcial);
+
+    iniciarNivel();
+
+    entrada.addEventListener("paste", (e) => {
+      e.preventDefault();
+      alert("Colar não é permitido.");
+    });
+
+    entrada.addEventListener("copy", (e) => {
+      e.preventDefault();
+      alert("Copiar não é permitido.");
+    });
+
+    entrada.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+
+    entrada.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'a'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        alert("Que feio você tentou copiar e colar.");
+      }
+    });
+  </script>
+
+</body>
+</html>

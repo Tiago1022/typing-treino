@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Bem-vindo</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 60px auto;
+      background-color: #ffffffc9;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    h1 {
+      color: #4b0082;
+      font-size: 28px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #333;
+      margin: 20px 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .aluno {
+      color: #0066cc;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 id="boasvindas"></h1>
+    <p>Este é um espaço onde você vai treinar sua digitação de forma divertida e prática!<br><br>
+      Digitar bem ajuda você a escrever mais rápido, sem erros e com mais confiança no teclado.<br>
+      Quanto mais você treina, melhor você se comunica usando o computador.
+    </p>
+    <p>Vamos começar essa jornada juntos? 💻✨</p>
+    <button onclick="iniciarTreino()">Começar Treino</button>
+  </div>
+
+  <script>
+    const nome = localStorage.getItem("usuario") || "Aluno";
+    document.getElementById("boasvindas").innerHTML = `Olá, <span class="aluno">${nome}</span>! Bem-vindo ao seu treino de digitação.`;
+
+    function iniciarTreino() {
+      window.location.href = "treino.html";
+    }
+  </script>
+
+</body>
+</html>
